@@ -121,19 +121,19 @@ public class PlayerMovement : MonoBehaviour
     
     private bool IsGrounded()
     {
-        float distanceToCheck = 0.01f;
+        float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.down, distanceToCheck, ground);
     }
 
     private bool IsTouchingWallOnLeft()
     {
-        float distanceToCheck = 0.01f;
+        float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.left, distanceToCheck, ground);
     }
 
     private bool IsTouchingWallOnRight()
     {
-        float distanceToCheck = 0.01f;
+        float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.right, distanceToCheck, ground);
     }
 }
