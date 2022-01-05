@@ -6,11 +6,13 @@ public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rigid;
     public BoxCollider2D box;
+    private Animator playerAnimator;
 
     public KeyCode moveLeftKey = KeyCode.A;
     public KeyCode moveRightKey = KeyCode.D;
     public KeyCode moveJumpKey = KeyCode.Space;
     public KeyCode moveCrouchKey = KeyCode.LeftShift;
+    public KeyCode moveDodgeKey = KeyCode.LeftControl;
 
     public float maxSpeed = 1.0f;
     public float acceleration = 0.1f;
@@ -24,9 +26,11 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
+    private bool isFlipped = false;
 
     void Start()
     {
+        playerAnimator = gameObject.GetComponent<Animator>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
         box = gameObject.GetComponent<BoxCollider2D>();
     }
@@ -64,17 +68,25 @@ public class PlayerMovement : MonoBehaviour
         {
             MoveRight();
         }
+        else if (!isMovingRight && !isMovingLeft)
+        {
+            playerAnimator.SetBool("IsWalking", false);
+        }
 
         if (IsGrounded() || IsTouchingWallOnLeft() || IsTouchingWallOnRight())
         {
             currentDoubleJumps = numberOfDoubleJumps;
         }
+
+        Float();
+        Flip();
     }
 
     private void MoveLeft()
     {
         if(rigid.velocity.x >= -1 * maxSpeed)
         {
+            playerAnimator.SetBool("IsWalking", true);
             rigid.velocity += new Vector2(-1 * maxSpeed * acceleration, 0);
             return;
         }
@@ -83,14 +95,24 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rigid.velocity.x <= maxSpeed)
         {
+            playerAnimator.SetBool("IsWalking", true);
             rigid.velocity += new Vector2(1 * maxSpeed * acceleration, 0);
             return;
         }
     }
-    private void Jump()
+    private void Float()
+    {
+        if (!IsGrounded())
+        {
+            playerAnimator.SetBool("IsFloat", true);
+        }
+        else playerAnimator.SetBool("IsFloat", false);
+    }
+        private void Jump()
     {
         if (IsGrounded())
         {
+            playerAnimator.SetTrigger("Jumper");
             Debug.Log("Jump");
             rigid.velocity = new Vector2(rigid.velocity.x, jumpStrenght);
             return;
@@ -98,6 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsTouchingWallOnLeft())
         {
+            playerAnimator.SetTrigger("Walljumper");
             Debug.Log("WallJumpLeft");
             rigid.velocity = new Vector2(1 * maxSpeed * wallJumpStrength, jumpStrenght);
             return;
@@ -105,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsTouchingWallOnRight())
         {
+            playerAnimator.SetTrigger("Walljumper");
             Debug.Log("WallJumpRight");
             rigid.velocity = new Vector2(-1 * maxSpeed * wallJumpStrength, jumpStrenght);
             return;
@@ -112,12 +136,29 @@ public class PlayerMovement : MonoBehaviour
 
         if (currentDoubleJumps > 0)
         {
-            Debug.Log("DouleJump");
+            playerAnimator.SetTrigger("DoubleJump");
+            Debug.Log("DoubleJump");
             currentDoubleJumps--;
             rigid.velocity = new Vector2(rigid.velocity.x, jumpStrenght);
         }        
     }
+    private void Flip()
+    {
+        Vector3 playerScale = transform.localScale;
+        if (isMovingLeft && !isMovingRight && !isFlipped)
+        {
+            playerScale.x *= -1;
+            transform.localScale = playerScale;
+            isFlipped = true;
 
+        }
+        if (!isMovingLeft && isMovingRight && isFlipped)
+        {
+            playerScale.x *= -1;
+            transform.localScale = playerScale;
+            isFlipped = false;
+        }
+    }
     
     private bool IsGrounded()
     {
