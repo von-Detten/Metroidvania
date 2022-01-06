@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode moveJumpKey = KeyCode.Space;
     public KeyCode moveCrouchKey = KeyCode.LeftShift;
     public KeyCode moveDodgeKey = KeyCode.LeftControl;
+    public KeyCode moveRunKey = KeyCode.LeftAlt;
 
     public float maxSpeed = 1.0f;
     public float acceleration = 0.1f;
@@ -27,9 +28,11 @@ public class PlayerMovement : MonoBehaviour
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
     private bool isFlipped = false;
+    private float playerSpeed;
 
     void Start()
     {
+        playerSpeed = maxSpeed;
         playerAnimator = gameObject.GetComponent<Animator>();
         rigid = gameObject.GetComponent<Rigidbody2D>();
         box = gameObject.GetComponent<BoxCollider2D>();
@@ -58,7 +61,18 @@ public class PlayerMovement : MonoBehaviour
         {
             Jump();
         }
-
+        else if (Input.GetKeyDown(moveCrouchKey))
+        {
+            Crouch();
+        }
+        else if (Input.GetKeyDown(moveRunKey))
+        {
+            Run();
+        }
+        else if (Input.GetKeyDown(moveDodgeKey))
+        {
+            Dodge();
+        }
 
         else if (isMovingLeft)
         {
@@ -84,19 +98,64 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveLeft()
     {
-        if(rigid.velocity.x >= -1 * maxSpeed)
+        if(rigid.velocity.x >= -1 * playerSpeed)
         {
             playerAnimator.SetBool("IsWalking", true);
-            rigid.velocity += new Vector2(-1 * maxSpeed * acceleration, 0);
+            rigid.velocity += new Vector2(-1 * playerSpeed * acceleration, 0);
             return;
         }
     }
+    private void Run()
+    {
+        if (playerAnimator.GetBool("IsRunning"))
+        {
+            playerAnimator.SetBool("IsRunning", false);
+            playerSpeed = maxSpeed;
+
+        }
+        else if (!playerAnimator.GetBool("IsRunning"))
+        {
+            playerAnimator.SetBool("IsCrouching", false);
+            playerAnimator.SetBool("IsRunning", true);
+            playerSpeed = maxSpeed * 3f;
+        }
+    }
+    private void Dodge()
+    {
+        //TEMPORARY WEIRD BS BECAUSE TIRED AND I HATE MYSELF
+        if (isMovingLeft && !isMovingRight)
+        {
+            playerAnimator.SetTrigger("Dodger");
+        }
+        else if (isMovingRight && !isMovingLeft)
+        {
+            playerAnimator.SetTrigger("Dodger");
+        }
+    }
+
+    private void Crouch()
+    {
+        if (playerAnimator.GetBool("IsCrouching"))
+        {
+            playerAnimator.SetBool("IsCrouching", false);
+            playerSpeed = maxSpeed;
+
+        }
+        else if (!playerAnimator.GetBool("IsCrouching"))
+        {
+            playerAnimator.SetBool("IsRunning", false);
+            playerAnimator.SetBool("IsCrouching", true);
+            playerSpeed = maxSpeed*0.5f;
+        }
+        
+
+    }
     private void MoveRight()
     {
-        if (rigid.velocity.x <= maxSpeed)
+        if (rigid.velocity.x <= playerSpeed)
         {
             playerAnimator.SetBool("IsWalking", true);
-            rigid.velocity += new Vector2(1 * maxSpeed * acceleration, 0);
+            rigid.velocity += new Vector2(1 * playerSpeed * acceleration, 0);
             return;
         }
     }
@@ -118,23 +177,23 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (IsTouchingWallOnLeft())
+        if (IsTouchingWallOnLeft() && !playerAnimator.GetBool("IsCrouching"))
         {
             playerAnimator.SetTrigger("Walljumper");
             Debug.Log("WallJumpLeft");
-            rigid.velocity = new Vector2(1 * maxSpeed * wallJumpStrength, jumpStrenght);
+            rigid.velocity = new Vector2(1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
-        if (IsTouchingWallOnRight())
+        if (IsTouchingWallOnRight() && !playerAnimator.GetBool("IsCrouching"))
         {
             playerAnimator.SetTrigger("Walljumper");
             Debug.Log("WallJumpRight");
-            rigid.velocity = new Vector2(-1 * maxSpeed * wallJumpStrength, jumpStrenght);
+            rigid.velocity = new Vector2(-1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
-        if (currentDoubleJumps > 0)
+        if (currentDoubleJumps > 0 && !playerAnimator.GetBool("IsCrouching"))
         {
             playerAnimator.SetTrigger("DoubleJump");
             Debug.Log("DoubleJump");
