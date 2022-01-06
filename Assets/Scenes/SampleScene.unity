@@ -333,6 +333,7 @@ MonoBehaviour:
   moveJumpKey: 32
   moveCrouchKey: 304
   moveDodgeKey: 306
+  moveRunKey: 308
   maxSpeed: 3
   acceleration: 0.1
   jumpStrenght: 5

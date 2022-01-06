@@ -37,8 +37,6 @@ public class PlayerMovement : MonoBehaviour
         rigid = gameObject.GetComponent<Rigidbody2D>();
         box = gameObject.GetComponent<BoxCollider2D>();
     }
-
-
     void Update()
     {
         if (Input.GetKeyDown(moveLeftKey) || Input.GetKey(moveLeftKey))
@@ -94,6 +92,8 @@ public class PlayerMovement : MonoBehaviour
 
         Float();
         Flip();
+        WallSlide();
+        SpeedCheck();
     }
 
     private void MoveLeft()
@@ -105,51 +105,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
     }
-    private void Run()
-    {
-        if (playerAnimator.GetBool("IsRunning"))
-        {
-            playerAnimator.SetBool("IsRunning", false);
-            playerSpeed = maxSpeed;
-
-        }
-        else if (!playerAnimator.GetBool("IsRunning"))
-        {
-            playerAnimator.SetBool("IsCrouching", false);
-            playerAnimator.SetBool("IsRunning", true);
-            playerSpeed = maxSpeed * 3f;
-        }
-    }
-    private void Dodge()
-    {
-        //TEMPORARY WEIRD BS BECAUSE TIRED AND I HATE MYSELF
-        if (isMovingLeft && !isMovingRight)
-        {
-            playerAnimator.SetTrigger("Dodger");
-        }
-        else if (isMovingRight && !isMovingLeft)
-        {
-            playerAnimator.SetTrigger("Dodger");
-        }
-    }
-
-    private void Crouch()
-    {
-        if (playerAnimator.GetBool("IsCrouching"))
-        {
-            playerAnimator.SetBool("IsCrouching", false);
-            playerSpeed = maxSpeed;
-
-        }
-        else if (!playerAnimator.GetBool("IsCrouching"))
-        {
-            playerAnimator.SetBool("IsRunning", false);
-            playerAnimator.SetBool("IsCrouching", true);
-            playerSpeed = maxSpeed*0.5f;
-        }
-        
-
-    }
     private void MoveRight()
     {
         if (rigid.velocity.x <= playerSpeed)
@@ -159,6 +114,60 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
     }
+    private void Run()
+    {
+        if (playerAnimator.GetBool("IsRunning"))
+        {
+            playerAnimator.SetBool("IsRunning", false);
+
+        }
+        else if (!playerAnimator.GetBool("IsRunning"))
+        {
+            playerAnimator.SetBool("IsCrouching", false);
+            playerAnimator.SetBool("IsRunning", true);
+
+        }
+    }
+    private void Dodge()
+    {
+        if (isMovingLeft || isMovingRight)
+        {
+            playerAnimator.SetTrigger("Dodger");
+        }
+
+       
+    }
+    private void Crouch()
+    {
+        if (playerAnimator.GetBool("IsCrouching"))
+        {
+            playerAnimator.SetBool("IsCrouching", false);
+
+        }
+        else if (!playerAnimator.GetBool("IsCrouching"))
+        {
+            playerAnimator.SetBool("IsRunning", false);
+            playerAnimator.SetBool("IsCrouching", true);
+        }
+        
+
+    }
+    private void SpeedCheck()
+    {
+        if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("MuDodge"))
+        {
+            playerSpeed = maxSpeed * 5f;
+        }
+        else if (playerAnimator.GetBool("IsCrouching"))
+        {
+            playerSpeed = maxSpeed * 0.5f;
+        }
+        else if (playerAnimator.GetBool("IsRunning"))
+        {
+            playerSpeed = maxSpeed * 3f;
+        }    
+        else playerSpeed = maxSpeed;
+    }
     private void Float()
     {
         if (!IsGrounded())
@@ -167,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else playerAnimator.SetBool("IsFloat", false);
     }
-        private void Jump()
+    private void Jump()
     {
         if (IsGrounded())
         {
@@ -193,7 +202,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (currentDoubleJumps > 0 && !playerAnimator.GetBool("IsCrouching"))
+        if (currentDoubleJumps > 0 && !playerAnimator.GetBool("IsCrouching") && !playerAnimator.GetBool("IsRunning"))
         {
             playerAnimator.SetTrigger("DoubleJump");
             Debug.Log("DoubleJump");
@@ -218,19 +227,26 @@ public class PlayerMovement : MonoBehaviour
             isFlipped = false;
         }
     }
+    private void WallSlide()
+    {
+        if (!IsGrounded() && (IsTouchingWallOnLeft() || IsTouchingWallOnRight()))
+        {
+            playerAnimator.SetBool("IsWallslide", true);
+            playerAnimator.SetBool("IsRunning", false);
+        }
+        else playerAnimator.SetBool("IsWallslide", false);
+    }
     
     private bool IsGrounded()
     {
         float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.down, distanceToCheck, ground);
     }
-
     private bool IsTouchingWallOnLeft()
     {
         float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.left, distanceToCheck, ground);
     }
-
     private bool IsTouchingWallOnRight()
     {
         float distanceToCheck = 0.1f;

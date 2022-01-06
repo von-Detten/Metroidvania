@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: 6b70d3012703f134885f4cc268acd9e4
+guid: fd25f5e537ca75741ad31f73d9e69e36
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2669836326271907140
-    second: Mu_Idle10x_0
+      213: -1098240828256764581
+    second: Mu_Wallslide10x_0
   - first:
-      213: -1306370629009993579
-    second: Mu_Idle10x_1
-  - first:
-      213: 2876034848821293133
-    second: Mu_Idle10x_2
-  - first:
-      213: 906035069275994809
-    second: Mu_Idle10x_3
+      213: 266159722060485965
+    second: Mu_Wallslide10x_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -44,7 +38,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -127,7 +121,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mu_Idle10x_0
+      name: Mu_Wallslide10x_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,14 +135,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 445fedb4ef92d0520800000000000000
-      internalID: 2669836326271907140
+      spriteID: b5dbce119c342c0f0800000000000000
+      internalID: -1098240828256764581
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mu_Idle10x_1
+      name: Mu_Wallslide10x_1
       rect:
         serializedVersion: 2
         x: 360
@@ -162,50 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5901bd895d6dedde0800000000000000
-      internalID: -1306370629009993579
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mu_Idle10x_2
-      rect:
-        serializedVersion: 2
-        x: 720
-        y: 0
-        width: 360
-        height: 650
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d4033a5057ab9e720800000000000000
-      internalID: 2876034848821293133
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mu_Idle10x_3
-      rect:
-        serializedVersion: 2
-        x: 1080
-        y: 0
-        width: 360
-        height: 650
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9bafd3a5812e29c00800000000000000
-      internalID: 906035069275994809
+      spriteID: d459ee66bd691b300800000000000000
+      internalID: 266159722060485965
       vertices: []
       indices: 
       edges: []
