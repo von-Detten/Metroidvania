@@ -14,10 +14,7 @@ public class SwingingRope : MonoBehaviour
 
     public List<Vector2> attatchedPoints = new List<Vector2>();
     private bool isAttatched = false;
-
-    /// <summary>
-    /// Known Bugs: Rope gets shorter then it should while recalculation attatchment points
-    /// </summary>
+    private float ropeDistance;
     
     void Start()
     {
@@ -68,6 +65,7 @@ public class SwingingRope : MonoBehaviour
                 attatchedPoints.Add(hit);
 
                 joint.distance = Vector2.Distance(hit, ConvertToV2(transform.position));
+                ropeDistance = joint.distance;
                 joint.enabled = true;
                 
                 UpdateRopeRenderer();
@@ -100,8 +98,9 @@ public class SwingingRope : MonoBehaviour
             if(Vector2.Distance(hitPointOld, attatchedPoints[attatchedPoints.Count - 2]) <= 0.1f) //close enough to delete
             {
                 anchor.transform.position = attatchedPoints[attatchedPoints.Count - 2];
-                joint.distance = Vector2.Distance(attatchedPoints[attatchedPoints.Count - 2], ConvertToV2(transform.position));
+                //joint.distance = Vector2.Distance(attatchedPoints[attatchedPoints.Count - 2], ConvertToV2(transform.position));
                 attatchedPoints.RemoveAt(attatchedPoints.Count - 1);
+                joint.distance = CalculateRemainingRope();
             }
         }
 
@@ -121,11 +120,29 @@ public class SwingingRope : MonoBehaviour
         {
             attatchedPoints.Add(hitPoint);
             anchor.transform.position = hitPoint;
-            joint.distance = Vector2.Distance(hitPoint, ConvertToV2(transform.position));
+            //joint.distance = Vector2.Distance(hitPoint, ConvertToV2(transform.position));
+            joint.distance = CalculateRemainingRope();
         }
         
         //Create new Point + new ancor position
         //Update length
+    }
+
+    private float CalculateRemainingRope()
+    {
+        if(attatchedPoints.Count >= 2)
+        {
+            float helper = ropeDistance;
+            for (int i = 1; i < attatchedPoints.Count; i++)
+            {
+                helper -= Vector2.Distance(attatchedPoints[i], attatchedPoints[i - 1]);
+            }
+            return helper;
+        }
+        else
+        {
+            return ropeDistance;
+        }
     }
 
     private void UpdateRopeRenderer()
