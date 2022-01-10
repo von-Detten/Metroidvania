@@ -31,7 +31,6 @@ public class SwingingRope : MonoBehaviour
         }
         if (isAttatched)
         {
-            
             UpdateRopeRenderer();
         }
     }
@@ -52,19 +51,21 @@ public class SwingingRope : MonoBehaviour
         }
         else
         {
-            if (Raycast() == null)
+            RaycastHit2D hit = RayPlayerToMouse();
+
+            if (hit.transform == null)
             {
                 Release();
                 return;
             }
             else
             {
-                Vector2 hit = Raycast();
                 anchor.gameObject.SetActive(true);
-                anchor.transform.position = hit;
-                attatchedPoints.Add(hit);
+                anchor.transform.position = hit.point;
+                attatchedPoints.Add(hit.point);
 
-                joint.distance = Vector2.Distance(hit, ConvertToV2(transform.position));
+                //joint.distance = Vector2.Distance(hit, ConvertToV2(transform.position));
+                joint.distance = hit.distance;
                 ropeDistance = joint.distance;
                 joint.enabled = true;
                 
@@ -93,7 +94,8 @@ public class SwingingRope : MonoBehaviour
         //Check whether old Point can be hit
         if (attatchedPoints.Count >= 2)
         {
-            Vector2 hitPointOld = RaycastToPoint(attatchedPoints[attatchedPoints.Count - 2]);
+            //Vector2 hitPointOld = RaycastToPoint(attatchedPoints[attatchedPoints.Count - 2]);
+            Vector2 hitPointOld = RayFromTo(transform.position, attatchedPoints[attatchedPoints.Count - 2]).point;
 
             if(Vector2.Distance(hitPointOld, attatchedPoints[attatchedPoints.Count - 2]) <= 0.1f) //close enough to delete
             {
@@ -105,7 +107,8 @@ public class SwingingRope : MonoBehaviour
         }
 
         //Raycast to last Point
-        Vector2 hitPoint = RaycastToPoint(attatchedPoints.Last());
+        //Vector2 hitPoint = RaycastToPoint(attatchedPoints.Last());
+        Vector2 hitPoint = RayFromTo(transform.position, attatchedPoints.Last()).point;
         //Check Distance between Points
         if (hitPoint == null)
         {
@@ -149,11 +152,9 @@ public class SwingingRope : MonoBehaviour
     {
         ropeRenderer.enabled = true;
         List<Vector3> ropePoints = new List<Vector3>();
-        Debug.Log("Array Rope Points:");
         foreach (Vector2 item in attatchedPoints)
         {
             ropePoints.Add(new Vector3(item.x, item.y, 0));
-            Debug.Log(ropePoints.Last().ToString());
         }
         ropePoints.Add(transform.position);
 
@@ -166,6 +167,7 @@ public class SwingingRope : MonoBehaviour
     /// Cast a ray from Object Position to Mouse and returns hit Point. May return null
     /// </summary>
     /// <returns>null or hit point</returns>
+    /*
     private Vector2 Raycast()
     {
         Vector2 playerPos = ConvertToV2(transform.position);
@@ -178,6 +180,17 @@ public class SwingingRope : MonoBehaviour
         Vector2 playerPos = ConvertToV2(transform.position);
         Vector2 aimAt = vec2 - playerPos;
         return Physics2D.Raycast(playerPos, aimAt, ropeMaxDistance, grappableObjects).point;
+    }
+    */
+    private RaycastHit2D RayPlayerToMouse()
+    {
+        return RayFromTo(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+    }
+
+    private RaycastHit2D RayFromTo(Vector2 from, Vector2 to)
+    {
+        Vector2 aimAt = to - from;
+        return Physics2D.Raycast(from, aimAt, ropeMaxDistance, grappableObjects);
     }
 
     private Vector2 ConvertToV2 (Vector3 v3)

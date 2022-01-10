@@ -295,7 +295,7 @@ Transform:
   m_Children:
   - {fileID: 519420032}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1258003585
 Rigidbody2D:
@@ -422,13 +422,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdcf862ffb6e5448a1b74d5bd78ef7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeHingeAnchor: {fileID: 1615819267}
-  ropeJoint: {fileID: 1258003589}
+  anchor: {fileID: 1615819267}
+  joint: {fileID: 1258003589}
   ropeRenderer: {fileID: 1615819271}
-  ropeLayerMask:
+  grappleSpeed: 5
+  grappableObjects:
     serializedVersion: 2
-    m_Bits: 384
-  ropeMaxCastDistance: 20
+    m_Bits: 256
+  ropeMaxDistance: 10
 --- !u!232 &1258003592
 DistanceJoint2D:
   m_ObjectHideFlags: 0
@@ -498,7 +499,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &1360099251
 LineRenderer:
@@ -726,7 +727,7 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1615819267
 GameObject:
@@ -741,7 +742,7 @@ GameObject:
   - component: {fileID: 1615819270}
   - component: {fileID: 1615819271}
   m_Layer: 7
-  m_Name: RopeHingeAnchor
+  m_Name: GrappleAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1038,7 +1039,7 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1986915665
 GameObject:
@@ -1147,5 +1148,5 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
