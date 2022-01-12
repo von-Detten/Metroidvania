@@ -8,36 +8,30 @@ public class GrapplingHook : MonoBehaviour
     public float grappleSpeed = 1.0f;
 
     //public PlayerMovement playerMovement;
-    private Rigidbody2D anchorRb;
+    //private Rigidbody2D anchorRb;
     private SpriteRenderer anchorSprite;
 
     public LayerMask grappableObjects;
     public float ropeMaxDistance = 10f;
 
-    private bool isGrappled = false;
+    public bool isAttatched = false;
 
     private void Awake()
     {
         joint.enabled = false;
-        anchorRb = anchor.GetComponent<Rigidbody2D>();
         anchorSprite = anchor.GetComponent<SpriteRenderer>();
         anchorSprite.enabled = false;
         ropeRenderer.enabled = true;
-    }
-
-    void Start()
-    {
-        
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Grapple();
+            Attatch();
             Debug.Log("Grappled");
         }
-        if (isGrappled)
+        if (isAttatched)
         {
             UpdateRopeRenderer();
             PullIn();
@@ -50,35 +44,38 @@ public class GrapplingHook : MonoBehaviour
         ropeRenderer.SetPositions(positions);
     }
 
-    private void Grapple()
+    public void Attatch()
     {
-        if (isGrappled)
+        if (isAttatched)
         {
-            joint.enabled = false;
-            anchorSprite.enabled = false;
-            ropeRenderer.enabled = false;
-            isGrappled = false;
-            
+            Release();
         }
         Vector2 AimAt = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y) - GetPlayerPos();
 
         RaycastHit2D hitResult =  Physics2D.Raycast(GetPlayerPos(), AimAt, ropeMaxDistance, grappableObjects);
         if(hitResult.collider == null) //Disable
         {
-            isGrappled = false;
+            isAttatched = false;
             return;
         }
         else //Enable
         {
-            anchorRb.transform.position = hitResult.point;
+            anchor.transform.position = hitResult.point;
             joint.distance = Vector2.Distance(GetPlayerPos(), hitResult.point);
             joint.enabled = true;
             anchorSprite.enabled = true;
         }
         
         ropeRenderer.enabled = true;
-        isGrappled = true;
+        isAttatched = true;
+    }
 
+    public void Release()
+    {
+        joint.enabled = false;
+        anchorSprite.enabled = false;
+        ropeRenderer.enabled = false;
+        isAttatched = false;
     }
 
     private void PullIn()

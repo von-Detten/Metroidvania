@@ -294,6 +294,8 @@ Transform:
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 519420032}
+  - {fileID: 1372862072}
+  - {fileID: 1350760202}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -332,20 +334,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigid: {fileID: 0}
   box: {fileID: 0}
-  moveLeftKey: 97
-  moveRightKey: 100
-  moveJumpKey: 32
-  moveCrouchKey: 304
-  moveDodgeKey: 306
-  moveRunKey: 308
   maxSpeed: 3
-  acceleration: 0.1
-  jumpStrenght: 5
-  wallJumpStrength: 3
+  acceleration: 1
+  jumpStrenght: 6
+  wallJumpStrength: 1.5
   numberOfDoubleJumps: 2
+  dogeForce: 40
+  dogeTime: 0.15
+  sprintSpeedFactor: 3
+  sneakSpeedFactor: 0.65
   ground:
     serializedVersion: 2
     m_Bits: 256
+  currentDoubleJumps: 0
+  isMovingLeft: 0
+  isMovingRight: 0
+  isFacingLeft: 0
+  isSneaking: 0
+  isSprinting: 0
+  isDogeing: 0
 --- !u!61 &1258003587
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -430,6 +437,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   ropeMaxDistance: 10
+  isAttatched: 0
 --- !u!232 &1258003592
 DistanceJoint2D:
   m_ObjectHideFlags: 0
@@ -469,6 +477,51 @@ MonoBehaviour:
     m_Bits: 256
   ropeMaxDistance: 10
   attatchedPoints: []
+  isAttatched: 0
+--- !u!1 &1350760201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1350760202}
+  - component: {fileID: 1350760203}
+  m_Layer: 0
+  m_Name: PlayerAnimationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1350760202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350760201}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1258003584}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1350760203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350760201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d332adfae74bf7d41a8dac3116eb495a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ani: {fileID: 1258003588}
 --- !u!1 &1360099249
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,6 +782,61 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &1372862071
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1372862072}
+  - component: {fileID: 1372862073}
+  m_Layer: 0
+  m_Name: PlayerController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1372862072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372862071}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1258003584}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1372862073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372862071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12c0c5fe8a7b7ed4f97697dca5bc8a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftKC: 97
+  rightKC: 100
+  jumpKC: 32
+  grappleKC: 101
+  ropeKC: 113
+  sprintKC: 306
+  dogeKC: 304
+  sneakKC: 115
+  rope: {fileID: 1258003593}
+  grapple: {fileID: 1258003590}
+  movement: {fileID: 1258003586}
+  ani: {fileID: 1350760203}
 --- !u!1 &1615819267
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,8 +1252,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1986915665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 1}
+  m_LocalPosition: {x: -10.03, y: -4, z: 0}
+  m_LocalScale: {x: 30, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

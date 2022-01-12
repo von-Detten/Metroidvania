@@ -13,7 +13,7 @@ public class SwingingRope : MonoBehaviour
     public float ropeMaxDistance;
 
     public List<Vector2> attatchedPoints = new List<Vector2>();
-    private bool isAttatched = false;
+    public bool isAttatched = false;
     private float ropeDistance;
     
     void Start()
