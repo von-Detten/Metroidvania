@@ -12,12 +12,12 @@ public class PlayerAnimationController : MonoBehaviour
     {
         if (move.isDogeing)
         {
-            ani.SetTrigger("Dodger");
+            ani.SetBool("IsDodging", true);
             return;
         }
         else
         {
-            //Implement Dogeing as bool
+            ani.SetBool("IsDodging", false);
         }
 
         if(!move.isMovingLeft && !move.isMovingRight)
@@ -40,6 +40,7 @@ public class PlayerAnimationController : MonoBehaviour
         }
         else
         {
+            ani.SetBool("IsWallslide", false);
             if (wasGrounded)
             {
                 ani.SetBool("IsFloat", false);
@@ -92,7 +93,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public bool WallSlide(PlayerMovement move)
     {
-        if(move.IsTouchingWallOnLeft() || move.IsTouchingWallOnRight())
+        if((move.IsTouchingWallOnLeft() || move.IsTouchingWallOnRight()) && !move.IsGrounded())
         {
             ani.SetBool("IsWallslide", true);
             return true;

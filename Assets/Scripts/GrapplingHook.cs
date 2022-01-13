@@ -26,11 +26,6 @@ public class GrapplingHook : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Attatch();
-            Debug.Log("Grappled");
-        }
         if (isAttatched)
         {
             UpdateRopeRenderer();
@@ -55,6 +50,7 @@ public class GrapplingHook : MonoBehaviour
         RaycastHit2D hitResult =  Physics2D.Raycast(GetPlayerPos(), AimAt, ropeMaxDistance, grappableObjects);
         if(hitResult.collider == null) //Disable
         {
+            anchor.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             isAttatched = false;
             return;
         }

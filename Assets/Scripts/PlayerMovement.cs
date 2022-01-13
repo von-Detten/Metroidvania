@@ -8,13 +8,6 @@ public class PlayerMovement : MonoBehaviour
     public BoxCollider2D box;
     private Animator playerAnimator;
 
-    //public KeyCode moveLeftKey = KeyCode.A;
-    //public KeyCode moveRightKey = KeyCode.D;
-    //public KeyCode moveJumpKey = KeyCode.Space;
-    //public KeyCode moveCrouchKey = KeyCode.LeftShift;
-    //public KeyCode moveDodgeKey = KeyCode.LeftControl;
-    //public KeyCode moveRunKey = KeyCode.LeftAlt;
-
     #region Config variables
     public float maxSpeed = 1.0f;
     public float acceleration = 0.1f;
@@ -23,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     public int numberOfDoubleJumps = 2;
     public float dogeForce = 10.0f;
     public float dogeTime = 0.2f;
+    public float dogeCooldownTime = 2.0f;
+
     public float sprintSpeedFactor = 3.0f;
     public float sneakSpeedFactor = 0.65f;
 
@@ -35,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region Current state variables
-    public bool isMovingLeft = false; //TODO replace with walking
+    public bool isMovingLeft = false;
     public bool isMovingRight = false;
     public bool isFacingLeft = false;
 
@@ -57,54 +52,6 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        /*
-        if (Input.GetKeyDown(moveLeftKey) || Input.GetKey(moveLeftKey))
-        {
-            isMovingLeft = true;
-        }
-        else
-        {
-            isMovingLeft = false;
-        }
-        if (Input.GetKeyDown(moveRightKey) || Input.GetKey(moveRightKey))
-        {
-            isMovingRight = true;
-        }
-        else
-        {
-            isMovingRight = false;
-        }
-        if (Input.GetKeyDown(moveJumpKey))
-        {
-            Jump();
-        }
-        else if (Input.GetKeyDown(moveCrouchKey))
-        {
-            Sneak();
-        }
-        else if (Input.GetKeyDown(moveRunKey))
-        {
-            Sprint();
-        }
-        else if (Input.GetKeyDown(moveDodgeKey))
-        {
-            Dodge();
-        }
-
-        else if (isMovingLeft)
-        {
-            MoveLeft();
-        }
-        else if (isMovingRight)
-        {
-            MoveRight();
-        }
-        else if (!isMovingRight && !isMovingLeft)
-        {
-            playerAnimator.SetBool("IsWalking", false);
-        }
-        */
-
         //Reset double Jumps
         if (IsGrounded() || IsTouchingWallOnLeft() || IsTouchingWallOnRight())
         {
@@ -128,31 +75,26 @@ public class PlayerMovement : MonoBehaviour
             CancelSprinting();
         }
 
-        //TODO: Remove
-        //Float();
         Flip();
-        //WallSlide();
         SetMovementSpeed();
     }
 
     public void MoveLeft()
     {
+        isMovingLeft = true;
+        isFacingLeft = true;
         if(rigid.velocity.x >= -1 * playerSpeed)
         {
-            //playerAnimator.SetBool("IsWalking", true);
-            isMovingLeft = true;
-            isFacingLeft = true;
             rigid.AddForce(Vector2.left * acceleration);
             return;
         }
     }
     public void MoveRight()
     {
+        isMovingRight = true;
+        isFacingLeft = false;
         if (rigid.velocity.x <= playerSpeed)
         {
-            //playerAnimator.SetBool("IsWalking", true);
-            isMovingRight = true;
-            isFacingLeft = false;
             rigid.AddForce(Vector2.right * acceleration);
             return;
         }
@@ -179,32 +121,26 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsGrounded())
         {
-            //playerAnimator.SetTrigger("Jumper");
-            //rigid.velocity = new Vector2(rigid.velocity.x, jumpStrenght);
             rigid.AddForce(Vector2.up * jumpStrenght, ForceMode2D.Impulse);
             return;
         }
 
         if (IsTouchingWallOnLeft() && !isSneaking)
         {
-            //playerAnimator.SetTrigger("Walljumper");
             rigid.velocity = new Vector2(1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
         if (IsTouchingWallOnRight() && !isSneaking)
         {
-            //playerAnimator.SetTrigger("Walljumper");
             rigid.velocity = new Vector2(-1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
         if (currentDoubleJumps > 0 && !isSneaking)
         {
-            //playerAnimator.SetTrigger("DoubleJump");
             currentDoubleJumps--;
             rigid.velocity = new Vector2(rigid.velocity.x, jumpStrenght);
-            //rigid.AddForce(Vector2.up * jumpStrenght, ForceMode2D.Impulse); Doesnt reset vertical momentum
         }        
     }
     private void Flip()
@@ -218,44 +154,10 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = defaultScale;
         }
     }
-    #region animator
-    /*
-    private void WallSlide()
-    {
-        if (!IsGrounded() && (IsTouchingWallOnLeft() || IsTouchingWallOnRight()))
-        {
-            playerAnimator.SetBool("IsWallslide", true);
-            playerAnimator.SetBool("IsRunning", false);
-        }
-        else playerAnimator.SetBool("IsWallslide", false);
-    }
-    */
-    /*
-    private void Float()
-    {
-        if (!IsGrounded())
-        {
-            playerAnimator.SetBool("IsFloat", true);
-        }
-        else playerAnimator.SetBool("IsFloat", false);
-    }
-    */
     public void Sneak()
     {
         isSneaking = true;
         isSprinting = false;
-        /*
-        if (playerAnimator.GetBool("IsCrouching"))
-        {
-            playerAnimator.SetBool("IsCrouching", false);
-
-        }
-        else if (!playerAnimator.GetBool("IsCrouching"))
-        {
-            playerAnimator.SetBool("IsRunning", false);
-            playerAnimator.SetBool("IsCrouching", true);
-        }
-        */
     }
 
     public void CancelSneaking()
@@ -267,19 +169,6 @@ public class PlayerMovement : MonoBehaviour
     {
         isSprinting = true;
         isSneaking = false; //TODO: Add Check for Height
-        /*
-        if (playerAnimator.GetBool("IsRunning"))
-        {
-            playerAnimator.SetBool("IsRunning", false);
-
-        }
-        else if (!playerAnimator.GetBool("IsRunning"))
-        {
-            playerAnimator.SetBool("IsCrouching", false);
-            playerAnimator.SetBool("IsRunning", true);
-
-        }
-        */
     }
 
     public void CancelSprinting()
@@ -289,6 +178,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void Dodge()
     {
+        if(dogeStart + dogeCooldownTime > Time.fixedTime)
+        {
+            return;
+        }
         if (isDogeing)
         {
             return;
@@ -305,10 +198,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rigid.velocity = new Vector2(1 * dogeForce, 0);
         }
-        //TODO: Remove
-        playerAnimator.SetTrigger("Dodger");
     }
-    #endregion
 
 
     #region position checks

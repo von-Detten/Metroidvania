@@ -93,6 +93,17 @@ public class PlayerControler : MonoBehaviour
             movement.isMovingRight = false;
         }
 
+        if(!movement.isMovingLeft && !movement.isMovingRight && rope.isAttatched)
+        {
+            if (movement.IsTouchingWallOnLeft())
+            {
+                movement.isFacingLeft = true;
+            }
+            else if (movement.IsTouchingWallOnRight())
+            {
+                movement.isFacingLeft = false;
+            }
+        }
         ani.UpdateAnimator(movement);
     }
 

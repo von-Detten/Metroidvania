@@ -24,11 +24,6 @@ public class SwingingRope : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightControl)) //Testing method
-        {
-            Debug.Log("Called Rope Attatch");
-            Attatch();
-        }
         if (isAttatched)
         {
             UpdateRopeRenderer();
@@ -64,7 +59,6 @@ public class SwingingRope : MonoBehaviour
                 anchor.transform.position = hit.point;
                 attatchedPoints.Add(hit.point);
 
-                //joint.distance = Vector2.Distance(hit, ConvertToV2(transform.position));
                 joint.distance = hit.distance;
                 ropeDistance = joint.distance;
                 joint.enabled = true;
@@ -163,25 +157,6 @@ public class SwingingRope : MonoBehaviour
     }
 
     #region helper functions
-    /// <summary>
-    /// Cast a ray from Object Position to Mouse and returns hit Point. May return null
-    /// </summary>
-    /// <returns>null or hit point</returns>
-    /*
-    private Vector2 Raycast()
-    {
-        Vector2 playerPos = ConvertToV2(transform.position);
-        Vector2 aimAt = ConvertToV2(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - playerPos;
-        return RaycastToPoint(aimAt);
-    }
-
-    private Vector2 RaycastToPoint(Vector2 vec2)
-    {
-        Vector2 playerPos = ConvertToV2(transform.position);
-        Vector2 aimAt = vec2 - playerPos;
-        return Physics2D.Raycast(playerPos, aimAt, ropeMaxDistance, grappableObjects).point;
-    }
-    */
     private RaycastHit2D RayPlayerToMouse()
     {
         return RayFromTo(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
