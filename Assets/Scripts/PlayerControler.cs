@@ -93,7 +93,7 @@ public class PlayerControler : MonoBehaviour
             movement.isMovingRight = false;
         }
 
-        if(!movement.isMovingLeft && !movement.isMovingRight && rope.isAttatched)
+        if(!movement.isMovingLeft && !movement.isMovingRight)
         {
             if (movement.IsTouchingWallOnLeft())
             {
