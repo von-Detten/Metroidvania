@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (IsTouchingWallOnLeft() && isSneaking)
+        if (IsTouchingWallOnLeft() && !isSneaking)
         {
             //playerAnimator.SetTrigger("Walljumper");
             rigid.velocity = new Vector2(1 * playerSpeed * wallJumpStrength, jumpStrenght);
