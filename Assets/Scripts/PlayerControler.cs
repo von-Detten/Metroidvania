@@ -109,7 +109,7 @@ public class PlayerControler : MonoBehaviour
                 movement.isFacingLeft = false;
             }
         }
-        ani.UpdateAnimator(movement);
+        ani.UpdateAnimator(movement, grapple.isAttatched);
     }
 
     #region Movement Options

@@ -12,8 +12,9 @@ public class PlayerAnimationController : MonoBehaviour
     public Animator ani = null;
 
     private bool wasGrounded = false;
+    private bool hitCeiling = false;
 
-    public void UpdateAnimator(PlayerMovement move)
+    public void UpdateAnimator(PlayerMovement move, bool isGrappled)
     {
         if (move.isDogeing)
         {
@@ -33,10 +34,23 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (!move.IsGrounded())
         {
+            //Floating
             if (!WallSlide(move))
             {
-                ani.SetBool("IsFloat", true);
                 wasGrounded = false;
+                //Ceiling
+                if (move.IsTouchingCeiling() && isGrappled)
+                {
+                    CeilingImpact(move);
+                    hitCeiling = true;
+                    return;
+                }
+                else
+                {
+                    ani.SetBool("IsTopwall", false);
+                    hitCeiling = false;
+                }
+                ani.SetBool("IsFloat", true);
             }
             else
             {
@@ -110,9 +124,16 @@ public class PlayerAnimationController : MonoBehaviour
         }
     }
 
-    public void CeilingImpact()
+    public void CeilingImpact(PlayerMovement move)
     {
-        //TODO: Implement
+        if (hitCeiling)
+        {
+            ani.SetBool("IsTopwall", true);
+        }
+        else
+        {
+            ani.SetBool("IsTopwall", false);
+        }
     }
 
     public void FloorImpact()

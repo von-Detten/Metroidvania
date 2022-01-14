@@ -225,6 +225,11 @@ public class PlayerMovement : MonoBehaviour
         float distanceToCheck = 0.1f;
         return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.down, distanceToCheck, ground);
     }
+    public bool IsTouchingCeiling()
+    {
+        float distanceToCheck = 0.1f;
+        return Physics2D.BoxCast(box.bounds.center, box.bounds.size, 0, Vector2.up, distanceToCheck, ground);
+    }
     public bool IsTouchingWallOnLeft()
     {
         float distanceToCheck = 0.1f;
