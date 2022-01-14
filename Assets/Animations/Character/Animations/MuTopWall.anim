@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MuTopwallHang
+  m_Name: MuTopWall
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,9 +20,9 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 6955123308276509186, guid: 3661fd2096b09a242b710914e7ecc712, type: 3}
+      value: {fileID: 7109019595176868964, guid: 11edf22a2ac9838479b6a56169e6a821, type: 3}
     - time: 0.125
-      value: {fileID: 4101578247564482934, guid: 3661fd2096b09a242b710914e7ecc712, type: 3}
+      value: {fileID: 5983838724091710490, guid: 11edf22a2ac9838479b6a56169e6a821, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -42,8 +42,8 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 6955123308276509186, guid: 3661fd2096b09a242b710914e7ecc712, type: 3}
-    - {fileID: 4101578247564482934, guid: 3661fd2096b09a242b710914e7ecc712, type: 3}
+    - {fileID: 7109019595176868964, guid: 11edf22a2ac9838479b6a56169e6a821, type: 3}
+    - {fileID: 5983838724091710490, guid: 11edf22a2ac9838479b6a56169e6a821, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
