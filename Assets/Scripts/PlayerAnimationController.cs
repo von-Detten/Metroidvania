@@ -57,6 +57,7 @@ public class PlayerAnimationController : MonoBehaviour
         }
         else
         {
+            ani.SetBool("IsTopwall", false);
             ani.SetBool("IsWallslide", false);
             if (wasGrounded)
             {
