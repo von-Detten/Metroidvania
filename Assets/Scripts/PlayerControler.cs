@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
 {
+    /// <summary>
+    /// Main player controller used to call movement and animation functions.
+    /// 
+    /// Used to decide valid or invalid inputs.
+    /// </summary>
     public KeyCode leftKC;
     public KeyCode rightKC;
     public KeyCode jumpKC;

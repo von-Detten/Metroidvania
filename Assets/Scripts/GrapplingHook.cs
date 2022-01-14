@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class GrapplingHook : MonoBehaviour
 {
+    /// <summary>
+    /// A grappling hook that can be used to attach this gameObject to any collider specified in grappableObjects.
+    /// This grappling hook pulls this gameObject to the position of the grappling hook after grappling.
+    /// </summary>
     public GameObject anchor;
     public DistanceJoint2D joint;
     public LineRenderer ropeRenderer;
     public float grappleSpeed = 1.0f;
 
-    //public PlayerMovement playerMovement;
-    //private Rigidbody2D anchorRb;
     private SpriteRenderer anchorSprite;
 
     public LayerMask grappableObjects;
@@ -33,12 +35,22 @@ public class GrapplingHook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the rendered grappling hook connection
+    /// </summary>
     private void UpdateRopeRenderer()
     {
         Vector3[] positions = {transform.position, anchor.transform.position};
         ropeRenderer.SetPositions(positions);
     }
 
+    /// <summary>
+    /// Used to attatch the gameObject.
+    /// 
+    /// Uses a raycast from the gameObject to the current mouse position with ropeMaxDistance as length.
+    /// Releases current cast grapple and attaches to new position.
+    /// If no attachable Object is found it just releases the grapple.
+    /// </summary>
     public void Attatch()
     {
         if (isAttatched)
@@ -73,7 +85,9 @@ public class GrapplingHook : MonoBehaviour
         ropeRenderer.enabled = false;
         isAttatched = false;
     }
-
+    /// <summary>
+    /// Used to decrease current DistanceJoint2D distance. This results into the player being pulled towards the anchor point.
+    /// </summary>
     private void PullIn()
     {
         float newDistance = joint.distance - 0.01f * grappleSpeed;

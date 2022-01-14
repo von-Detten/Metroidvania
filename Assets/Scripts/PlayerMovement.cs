@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    /// <summary>
+    /// Main script for the movement of the player.
+    /// 
+    /// Includes:
+    /// movement in air and on ground
+    /// sprinting
+    /// sneaking
+    /// dodging
+    /// sneaking
+    /// jump, doublejump, walljump
+    /// </summary>
     public Rigidbody2D rigid;
     public BoxCollider2D box;
     private Animator playerAnimator;
@@ -75,7 +86,9 @@ public class PlayerMovement : MonoBehaviour
             CancelSprinting();
         }
 
+        //Set player direction
         Flip();
+        //Set sneaking/sprinting/walking
         SetMovementSpeed();
     }
 
@@ -89,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
     }
+
     public void MoveRight()
     {
         isMovingRight = true;
@@ -119,30 +133,32 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        if (IsGrounded())
+        if (IsGrounded()) //Normal Jump
         {
             rigid.AddForce(Vector2.up * jumpStrenght, ForceMode2D.Impulse);
             return;
         }
 
-        if (IsTouchingWallOnLeft() && !isSneaking)
+        if (IsTouchingWallOnLeft() && !isSneaking) //Wall Jump left side
         {
             rigid.velocity = new Vector2(1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
-        if (IsTouchingWallOnRight() && !isSneaking)
+        if (IsTouchingWallOnRight() && !isSneaking) //Wall Jump left side
         {
             rigid.velocity = new Vector2(-1 * playerSpeed * wallJumpStrength, jumpStrenght);
             return;
         }
 
-        if (currentDoubleJumps > 0 && !isSneaking)
+        if (currentDoubleJumps > 0 && !isSneaking) //Double Jump
         {
             currentDoubleJumps--;
             rigid.velocity = new Vector2(rigid.velocity.x, jumpStrenght);
         }        
     }
+
+    //Orient Player into the right direction
     private void Flip()
     {
         if (isFacingLeft)
@@ -154,6 +170,7 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = defaultScale;
         }
     }
+
     public void Sneak()
     {
         isSneaking = true;
@@ -168,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
     public void Sprint()
     {
         isSprinting = true;
-        isSneaking = false; //TODO: Add Check for Height
+        isSneaking = false;
     }
 
     public void CancelSprinting()
@@ -176,6 +193,7 @@ public class PlayerMovement : MonoBehaviour
         isSprinting = false;
     }
 
+    //Starts dodge and sets cooldown timer
     public void Dodge()
     {
         if(dogeStart + dogeCooldownTime > Time.fixedTime)

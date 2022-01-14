@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class SwingingRope : MonoBehaviour
 {
+    /// <summary>
+    /// A rope that can be used to attach this gameObject to any collider specified in grappableObjects.
+    /// This rope automatically wraps and unwraps around colliders while keeping its total lenght.
+    /// </summary>
     public Transform anchor;
     public DistanceJoint2D joint;
     public LineRenderer ropeRenderer;
@@ -38,6 +42,13 @@ public class SwingingRope : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Used to try to attach the rope.
+    /// 
+    /// Uses a raycast from the gameObject to the current mouse position with ropeMaxDistance as length.
+    /// Releases current cast rope and attaches to new position.
+    /// If no attachable Object is found it just releases the rope.
+    /// </summary>
     public void Attatch()
     {
         if (isAttatched)
@@ -69,6 +80,9 @@ public class SwingingRope : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Used to releas current attached rope.
+    /// </summary>
     public void Release()
     {
         if (!isAttatched)
@@ -83,25 +97,28 @@ public class SwingingRope : MonoBehaviour
         isAttatched = false;
     }
 
+
+    /// <summary>
+    /// Used to calculate current wrapping points of the rope.
+    /// 
+    /// Tracks current attatched points in attatchedPoints.
+    /// </summary>
     private void UpdateRope()
     {
         //Check whether old Point can be hit
         if (attatchedPoints.Count >= 2)
         {
-            //Vector2 hitPointOld = RaycastToPoint(attatchedPoints[attatchedPoints.Count - 2]);
             Vector2 hitPointOld = RayFromTo(transform.position, attatchedPoints[attatchedPoints.Count - 2]).point;
 
             if(Vector2.Distance(hitPointOld, attatchedPoints[attatchedPoints.Count - 2]) <= 0.1f) //close enough to delete
             {
                 anchor.transform.position = attatchedPoints[attatchedPoints.Count - 2];
-                //joint.distance = Vector2.Distance(attatchedPoints[attatchedPoints.Count - 2], ConvertToV2(transform.position));
                 attatchedPoints.RemoveAt(attatchedPoints.Count - 1);
                 joint.distance = CalculateRemainingRope();
             }
         }
 
         //Raycast to last Point
-        //Vector2 hitPoint = RaycastToPoint(attatchedPoints.Last());
         Vector2 hitPoint = RayFromTo(transform.position, attatchedPoints.Last()).point;
         //Check Distance between Points
         if (hitPoint == null)
@@ -117,14 +134,32 @@ public class SwingingRope : MonoBehaviour
         {
             attatchedPoints.Add(hitPoint);
             anchor.transform.position = hitPoint;
-            //joint.distance = Vector2.Distance(hitPoint, ConvertToV2(transform.position));
             joint.distance = CalculateRemainingRope();
         }
-        
-        //Create new Point + new ancor position
-        //Update length
     }
 
+    /// <summary>
+    /// Used to set the current rope wrappinng points, the initial attached point and current gameObject position for the LineRenderer to render the rope.
+    /// </summary>
+    private void UpdateRopeRenderer()
+    {
+        ropeRenderer.enabled = true;
+        List<Vector3> ropePoints = new List<Vector3>();
+        foreach (Vector2 item in attatchedPoints)
+        {
+            ropePoints.Add(new Vector3(item.x, item.y, 0));
+        }
+        ropePoints.Add(transform.position);
+
+        ropeRenderer.positionCount = ropePoints.Count;
+        ropeRenderer.SetPositions(ropePoints.ToArray());
+    }
+
+    #region internal helper functions
+    /// <summary>
+    /// Tracks rope length
+    /// </summary>
+    /// <returns>Rope length after wrapping</returns>
     private float CalculateRemainingRope()
     {
         if(attatchedPoints.Count >= 2)
@@ -142,21 +177,6 @@ public class SwingingRope : MonoBehaviour
         }
     }
 
-    private void UpdateRopeRenderer()
-    {
-        ropeRenderer.enabled = true;
-        List<Vector3> ropePoints = new List<Vector3>();
-        foreach (Vector2 item in attatchedPoints)
-        {
-            ropePoints.Add(new Vector3(item.x, item.y, 0));
-        }
-        ropePoints.Add(transform.position);
-
-        ropeRenderer.positionCount = ropePoints.Count;
-        ropeRenderer.SetPositions(ropePoints.ToArray());
-    }
-
-    #region helper functions
     private RaycastHit2D RayPlayerToMouse()
     {
         return RayFromTo(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));

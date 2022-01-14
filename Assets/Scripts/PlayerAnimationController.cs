@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
+    /// <summary>
+    /// Used to offer a callable script for the animator of the player.
+    /// 
+    /// Decides current animation state if no inputs are given.
+    /// </summary>
     public Animator ani = null;
 
     private bool wasGrounded = false;
