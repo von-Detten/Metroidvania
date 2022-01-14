@@ -40,7 +40,7 @@ public class PlayerAnimationController : MonoBehaviour
                 //Ceiling
                 if (move.IsTouchingCeiling() && isGrappled)
                 {
-                    CeilingImpact(move);
+                    ani.SetBool("IsTopwall", true);
                     return;
                 }
                 else
@@ -51,6 +51,7 @@ public class PlayerAnimationController : MonoBehaviour
             }
             else
             {
+                ani.SetBool("IsTopwall", false);
                 wasGrounded = true;
             }
         }
@@ -119,11 +120,6 @@ public class PlayerAnimationController : MonoBehaviour
             ani.SetBool("IsWallslide", false);
             return false;
         }
-    }
-
-    public void CeilingImpact(PlayerMovement move)
-    {
-        ani.SetBool("IsTopwall", true);
     }
 
     public void FloorImpact()
